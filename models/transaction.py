@@ -4,8 +4,8 @@ from models.product import Product
 
 class Transaction (object):
     def __init__ (self, buyer: Buyer, seller: Seller, product: Product):
-        self.buyer = buyer
-        self.seller = seller
+        self.buyer = f"{buyer.first_name} {buyer.last_name}"
+        self.seller = f"{seller.first_name} {seller.last_name}"
         self.product = product
     
     def __repr__ (self) -> str:

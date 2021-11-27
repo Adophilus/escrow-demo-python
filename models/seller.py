@@ -10,6 +10,13 @@ class Seller (Trader):
     def products (self) -> list[Product]:
         return list(self.__products)
 
+    def releaseProduct (self, product: Product) -> Product:
+        for my_product in self.__products:
+            if (my_product.name == product.name):
+                my_product.stock -= 1
+                return my_product
+        return False
+
     def hasProductInStock (self, product: Product) -> bool:
         for my_product in self.__products:
             if (my_product.name == product.name):

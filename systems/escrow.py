@@ -1,4 +1,4 @@
-from models import Trader, Buyer, Seller, Product, Transaction
+from models import Trader, Buyer, Seller, Commodity, Product, Transaction
 import helpers
 import litedb
 
@@ -21,11 +21,14 @@ class Escrow (object):
             raise Exception(f"{product.name} not in {seller.first_name}'s stock")
         if not (buyer.getAccountBalance() >= product.price):
             raise Exception(f"{buyer.first_name} does not have the required balance to complete the transaction")
-        buyer.transferFunds(product.price, self)
-        self.transferFunds(product.price - self.transaction_fee, buyer)
-        transaction = Transaction(buyer, seller, product)
-        self.database.insert(transaction)
-        return transaction
+        
+        if (seller.releaseProduct(product) and buyer.addCommodity(Commodity(product.name, product.price))):
+            buyer.transferFunds(product.price, self)
+            self.transferFunds(product.price - self.transaction_fee, buyer)
+            
+            transaction = Transaction(buyer, seller, product)
+            self.database.insert(transaction)
+            return transaction
 
     def transferFunds (self, amount: float, trader: Trader) -> bool:
         return self.account.transferFunds(amount, trader.account)
