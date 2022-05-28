@@ -17,8 +17,12 @@ class Seller (Trader):
                 return my_product
         return False
 
-    def hasProductInStock (self, product: Product) -> bool:
-        for my_product in self.__products:
-            if (my_product.name == product.name):
-                return bool(my_product.stock)
-        return False
+    def hasProductInStock(self, product: Product) -> bool:
+        return next(
+            (
+                bool(my_product.stock)
+                for my_product in self.__products
+                if (my_product.name == product.name)
+            ),
+            False,
+        )
